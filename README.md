@@ -23,12 +23,7 @@ There are a few ways to install this framework.
 - Use `Composer`:
 
 ```
-{
-    ...
-    "require": {
-        "dawidgorecki/litemvc": "1.*"
-    }
-}
+composer create-project dawidgorecki/litemvc
 ```
 
 - Download the framework directly. 
