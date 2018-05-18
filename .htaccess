@@ -1,0 +1,3 @@
+# If you route your vhost to /Public this file is not needed
+RewriteEngine on
+RewriteRule ^(.*) Public/$1 [L]
