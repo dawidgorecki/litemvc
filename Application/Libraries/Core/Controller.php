@@ -2,106 +2,90 @@
 
 namespace Libraries\Core;
 
+use Controllers\ErrorController;
 use Libraries\Http\Session;
-use ReflectionClass;
+use Libraries\Utilities\ClassUtils;
 
-class Controller
+abstract class Controller
 {
-        
+
+    /**
+     * @var \Libraries\Core\Model|null
+     */
     protected $model;
-    protected $view; 
-    
+
+    /**
+     * @var \Libraries\Core\View
+     */
+    protected $view;
+
     public function __construct()
     {
         /**
          * Start session
          */
         Session::init();
-        
+
         /**
-         * Create model and view objects for controller
+         * Create View object
          */
-        $modelName = $this->getModelShortName();
-        
-        $this->model = $this->loadModel($modelName);
         $this->view = new View();
+
+        /**
+         * Try to load model for controller
+         */
+        $modelName = $this->getControllerShortName();
+        $this->model = $this->loadModel($modelName);
     }
-    
+
+
     /**
      * Performed before any actions
      */
     public function before()
     {
-        // e.g. checking authentication
+        if (!Session::userIsLoggedIn()) {
+            /**
+             * If user is not logged in render error 403 page
+             */
+            $errorController = new ErrorController();
+            $errorController->error403();
+
+            exit();
+        }
     }
-    
+
     /**
      * After action executing
      */
     public function after()
     {
-        
-    }
-    
-    /**
-     * Return model object
-     * @return Model
-     */
-    public function getModel(): Model
-    {
-        return $this->model;
-    }
-    
-    /**
-     * Return view object
-     * @return View
-     */
-    public function getView(): View
-    {
-        return $this->view;
-    }
-    
-    /**
-     * Create and return model instance
-     * @param string $model
-     * @return Model
-     */
-    public function loadModel(string $modelName)
-    {
-        if (file_exists($this->getModelPath($modelName))) {
-            /**
-             * Model was found,
-             * create and return model
-             */
-            
-            $modelName = '\\Models\\' . $modelName;
-            return new $modelName();
-        } else {
-            /**
-             * Model does not exists
-             */
-            return null;
-        }
+        // Some operations
     }
 
     /**
-     * Default controller action
+     * Return model object
+     * @return Model|null
      */
-    public function view()
+    public function getModel(): ?Model
     {
-        $this->getView()->render($this->getModelShortName());
+        return $this->model;
     }
-    
+
     /**
      * Return Model name based on current Controller name
      * @return string
      */
-    protected function getModelShortName(): string
+    protected function getControllerShortName(): string
     {
-        $controllerShortName = (new ReflectionClass($this))->getShortName();
-        return str_replace('Controller', '', $controllerShortName);    
+        try {
+            $modelName = ClassUtils::getShortName($this);
+            return str_replace('Controller', '', $modelName);
+        } catch (\ReflectionException $ex) {
+            return '';
+        }
     }
-    
+
     /**
      * Return model path
      * @param string $model
@@ -113,6 +97,48 @@ class Controller
         $path .= str_replace('\\', '/', $modelName) . '.php';
 
         return $path;
+    }
+
+    /**
+     * Create and return model instance
+     * @param string $modelName
+     * @return null|Model
+     */
+    public function loadModel(string $modelName): ?Model
+    {
+        if (file_exists($this->getModelPath($modelName))) {
+            /**
+             * Model was found,
+             * create and return model
+             */
+
+            $modelName = '\\Models\\' . $modelName;
+            return new $modelName();
+        } else {
+            System::log("Model {$modelName} not exists", __FILE__, System::E_WARNING);
+
+            /**
+             * Model does not exists
+             */
+            return null;
+        }
+    }
+
+    /**
+     * Return view object
+     * @return View
+     */
+    public function getView(): View
+    {
+        return $this->view;
+    }
+
+    /**
+     * Default controller action
+     */
+    public function view()
+    {
+        $this->getView()->render($this->getControllerShortName());
     }
 
 }

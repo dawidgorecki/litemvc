@@ -9,13 +9,8 @@ html, body {
   padding: 0;
 }
 
-.content-box {
-  max-width: 700px;
-  margin-top: 20vh;
-}
-
-.container {
-  max-width: 960px;
+.alert, .btn, .form-control {
+  border-radius: 0;
 }
 
 .card-deck .card {

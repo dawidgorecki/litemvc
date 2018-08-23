@@ -6,13 +6,13 @@ class StringUtils
 {
 
     /**
-     * Convert the string with hyphens to StudlyCaps
+     * Convert the string to StudlyCaps
      * @param string $string
      * @return string
      */
     public static function convertToStudlyCaps(string $string): string
     {
-        return str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
+        return str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
     }
 
     /**

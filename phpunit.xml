@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="Vendor/autoload.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         stderr="true">
+    <testsuites>
+        <testsuite name="Core Suite">
+            <directory>./Tests/Libraries/Core/</directory>
+        </testsuite>
+        <testsuite name="Http Suite">
+            <directory>./Tests/Libraries/Http/</directory>
+        </testsuite>
+        <testsuite name="Utilities Suite">
+            <directory>./Tests/Libraries/Utilities/</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">Application/Libraries</directory>
+        </whitelist>
+    </filter>
+</phpunit>

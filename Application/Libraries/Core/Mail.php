@@ -8,7 +8,14 @@ use PHPMailer\PHPMailer\Exception;
 class Mail
 {
 
+    /**
+     * @var PHPMailer
+     */
     private $mailObject;
+
+    /**
+     * @var string
+     */
     private $error;
 
     /**
@@ -18,18 +25,18 @@ class Mail
     {
         $mail = new PHPMailer(true);
 
-        $mail->SMTPDebug = 0;
+        $mail->SMTPDebug = (System::getEnvironment() == System::ENV_PRODUCTION) ? 0 : 2;
         $mail->CharSet = 'UTF-8';
 
         // Set mailer to use SMTP
         $mail->IsSMTP();
 
         $mail->Host = Config::get('EMAIL_SMTP_HOST');
-        $mail->SMTPAuth = Config::get('EMAIL_SMTP_AUTH');
+        $mail->SMTPAuth = Config::get('EMAIL_SMTP_AUTH', true);
         $mail->Username = Config::get('EMAIL_SMTP_USERNAME');
         $mail->Password = Config::get('EMAIL_SMTP_PASSWORD');
-        $mail->SMTPSecure = Config::get('EMAIL_SMTP_ENCRYPTION');
-        $mail->Port = Config::get('EMAIL_SMTP_PORT');
+        $mail->SMTPSecure = Config::get('EMAIL_SMTP_ENCRYPTION', 'ssl');
+        $mail->Port = Config::get('EMAIL_SMTP_PORT', 465);
 
         $this->mailObject = $mail;
     }
@@ -73,7 +80,7 @@ class Mail
     {
         $this->mailObject->AddBCC($address, $name);
     }
-    
+
     /**
      * Set email content
      * @param string $subject
@@ -87,15 +94,22 @@ class Mail
         $this->mailObject->Body = $body;
         $this->mailObject->AltBody = $altBody;
     }
-    
+
     /**
      * Add an attachment from a path on the filesystem
      * @param string $path
      * @param string $name
+     * @return bool
      */
-    public function addAttachment(string $path, string $name = '')
+    public function addAttachment(string $path, string $name = ''): bool
     {
-        $this->mailObject->addAttachment($path, $name);
+        try {
+            $this->mailObject->addAttachment($path, $name);
+            return true;
+        } catch (Exception $ex) {
+            $this->error = $this->mailObject->ErrorInfo;
+            return false;
+        }
     }
 
     /**
@@ -106,9 +120,8 @@ class Mail
      */
     public function sendMessage(string $fromEmail, string $fromName): bool
     {
-        $this->mailObject->setFrom($fromEmail, $fromName);
-
         try {
+            $this->mailObject->setFrom($fromEmail, $fromName);
             $this->mailObject->Send();
             return true;
         } catch (Exception $ex) {

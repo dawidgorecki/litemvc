@@ -8,71 +8,71 @@ class Request
 {
 
     /**
-     * Returns the value of a specific key of the GET superglobal
+     * Returns the value of a specific key of the GET array
      * @param string $key
-     * @param bool $filter
+     * @param bool $xssFilter
+     * @param mixed $default
      * @return mixed
      */
-    public static function get(string $key, bool $filter = true)
+    public static function get(string $key, bool $xssFilter = false, $default = '')
     {
-        if (isset($_GET[$key])) {
-            
-            $value = $_GET[$key];
-            
-            if ($filter) {
-                return Filter::XSSFilter($value);
-            } else {
-                return $value;
-            }
+        if (!isset($_GET[$key])) {
+            return $default;
         }
-        
-        return false;
+
+        $value = $_GET[$key];
+
+        if ($xssFilter) {
+            return Filter::XSSFilter($value);
+        } else {
+            return $value;
+        }
     }
 
     /**
-     * Returns the value of a specific key of the POST superglobal
+     * Returns the value of a specific key of the POST array
      * @param string $key
-     * @param bool $filter
+     * @param bool $xssFilter
+     * @param mixed $default
      * @return mixed
      */
-    public static function post(string $key, bool $filter = true)
+    public static function post(string $key, bool $xssFilter = false, $default = '')
     {
-        if (isset($_POST[$key])) {
-            
-            $value = $_POST[$key];
-            
-            if ($filter) {
-                return Filter::XSSFilter($value);
-            } else {
-                return $value;
-            }
+        if (!isset($_POST[$key])) {
+            return $default;
         }
-        
-        return false;
+
+        $value = $_POST[$key];
+
+        if ($xssFilter) {
+            return Filter::XSSFilter($value);
+        } else {
+            return $value;
+        }
     }
 
     /**
-     * Returns the value of a specific key of the COOKIE superglobal
+     * Returns the value of a specific key of the COOKIE
      * @param string $key
-     * @param bool $filter
+     * @param bool $xssFilter
+     * @param mixed $default
      * @return mixed
      */
-    public static function cookie(string $key, bool $filter = true)
+    public static function cookie(string $key, bool $xssFilter = false, $default = '')
     {
-        if (isset($_COOKIE[$key])) {
-           
-            $value = $_COOKIE[$key];
-            
-            if ($filter) {
-                return Filter::XSSFilter($value);
-            } else {
-                return $value;
-            }
+        if (!isset($_COOKIE[$key])) {
+            return $default;
         }
-        
-        return false;
+
+        $value = $_COOKIE[$key];
+
+        if ($xssFilter) {
+            return Filter::XSSFilter($value);
+        } else {
+            return $value;
+        }
     }
-    
+
     /**
      * Returns request method used to access the page, i.e. 'GET', 'POST'
      * @return string

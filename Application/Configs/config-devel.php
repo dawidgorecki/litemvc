@@ -1,12 +1,15 @@
 <?php
-
+var_dump(realpath(__DIR__ . '/../../Logs'));
 return [
     /**
      * Application settings
      */
-    
+
     'APP_TITLE' => 'LiteMVC',
-    'APP_DESCRIPTION' => 'Simple MVC framework for PHP 7.0.0 and later',
+    'APP_DESCRIPTION' => 'Simple MVC framework for PHP 7.1.0 and later',
+    'APP_LANG' => 'en',
+    'LOG_PATH' => realpath(__DIR__ . '/../../Logs'),
+    'LOG_FILENAME' => 'error.log',
     
     /** 
      * Smarty configuration
@@ -29,7 +32,7 @@ return [
     
     'DB_TYPE' => 'pgsql',
     'DB_HOST' => 'localhost',
-    'DB_NAME' => 'dbname',
+    'DB_NAME' => 'postgres',
     'DB_USER' => 'postgres',
     'DB_PASS' => '',
     'DB_PORT' => '5432',

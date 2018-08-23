@@ -1,2 +1,12 @@
-/Vendor/
-/nbproject/
+/Vendor
+/nbproject
+/.idea
+
+/Temp/Smarty/Compile
+!/Temp/Smarty/Compile/.gitkeep
+
+/Temp/Smarty/Cache
+!/Temp/Smarty/Cache/.gitkeep
+
+/Logs
+!/Logs/.gitkeep

@@ -2,10 +2,13 @@
 
 namespace Libraries\Core;
 
-class Model
+abstract class Model
 {
+    /**
+     * @var \Libraries\Core\Database
+     */
     protected $database;
-    
+
     /**
      * Create database connection
      */
@@ -14,7 +17,7 @@ class Model
         $connection = DatabaseFactory::getFactory()->getConnection();
         $this->database = new Database($connection);
     }
-    
+
     /**
      * Get database instance
      * @return \Libraries\Core\Database

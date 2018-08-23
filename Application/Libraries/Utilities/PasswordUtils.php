@@ -17,13 +17,18 @@ class PasswordUtils
     }
 
     /**
-     * Generate a pseudo-random string of bytes and return as hexadecimal string
-     * @param int $length
+     * Generate a pseudo-random string of bytes and return as bytes or hexadecimal string
+     * @param int $lengthInBytes
      * @return string
      */
-    public static function token(int $length = 20): string
+    public static function token(int $lengthInBytes = 20, bool $returnAsHex = true): string
     {
-        $bytes = openssl_random_pseudo_bytes($length);
+        $bytes = openssl_random_pseudo_bytes($lengthInBytes);
+
+        if (!$returnAsHex) {
+            return $bytes;
+        }
+
         return bin2hex($bytes);
     }
 
@@ -85,7 +90,7 @@ class PasswordUtils
         $MD4Hash = hash('md4', $password);
         $NTLMHash = strtoupper($MD4Hash);
 
-        return($NTLMHash);
+        return ($NTLMHash);
     }
 
     /**

@@ -1,18 +1,7 @@
-* {
-  box-sizing: border-box; }
+* { box-sizing: border-box; }
 
-html, body {
-  position: relative;
-  min-height: 100%;
-  margin: 0;
-  padding: 0; }
+html, body { position: relative; min-height: 100%; margin: 0; padding: 0; }
 
-.content-box {
-  max-width: 700px;
-  margin-top: 20vh; }
+.alert, .btn, .form-control { border-radius: 0; }
 
-.container {
-  max-width: 960px; }
-
-.card-deck .card {
-  min-width: 220px; }
+.card-deck .card { min-width: 220px; }

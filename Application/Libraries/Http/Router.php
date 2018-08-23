@@ -7,12 +7,19 @@ use Libraries\Core\System;
 class Router
 {
 
+    /**
+     * @var array
+     */
     protected $routes = [];
+
+    /**
+     * @var array
+     */
     protected $params = [];
 
     /**
      * Get all the routes from the routing table
-     * @return type
+     * @return array
      */
     public function getRoutes(): array
     {
@@ -29,7 +36,7 @@ class Router
     }
 
     /**
-     * Return matched route parameter specified by $key
+     * Return matched route parameter specified by key
      * @param string $key
      * @return string
      */
@@ -40,20 +47,21 @@ class Router
 
     /**
      * Add a route to the routing table
-     * @param type $route
-     * @param type $params
+     * @param string $route
+     * @param string $controllerName
+     * @param string $actionName
      */
-    public function add(string $route, string $controllerName, string $actionName)
+    public function add(string $route, string $controllerName = '', string $actionName = '')
     {
         // Replace "/" to "\/"
         $route = preg_replace('/\//', '\\/', $route);
-        
+
         // Convert variables e.g. {id}
         $route = preg_replace('/\{([a-z]+)\}/', '(?P<\1>[a-z0-9-]+)', $route);
-        
+
         // Convert variables with custom regular expressions e.g. {id:\d+}
         $route = preg_replace('/\{([a-z]+):([^\}]+)\}/', '(?P<\1>\2)', $route);
-        
+
         // Add start and end delimiters, and case insensitive flag
         $route = '/^' . $route . '$/i';
 
@@ -83,6 +91,7 @@ class Router
     /**
      * Add parameters to the $params table
      * @param array $matches
+     * @param array $params
      */
     private function setParams(array $matches, array $params)
     {
@@ -98,18 +107,18 @@ class Router
     /**
      * Return controller name
      * @param bool $raw
-     * @return type
+     * @return string
      */
-    public function getControllerName(bool $raw = false)
+    public function getControllerName(bool $raw = false): string
     {
-        if (isset($this->params['controller'])) {
+        if (!empty($this->params['controller'])) {
 
             if (!$raw) {
                 $controller = $this->params['controller'];
                 $controller = str_replace(' ', '\\', ucwords(str_replace('\\', ' ', $controller)));
             }
 
-            return $controller;
+            return ucfirst($controller);
         }
 
         return System::getDefaultController();
@@ -121,7 +130,7 @@ class Router
      */
     public function getActionName(): string
     {
-        if (isset($this->params['action'])) {
+        if (!empty($this->params['action'])) {
             return lcfirst($this->params['action']);
         }
 

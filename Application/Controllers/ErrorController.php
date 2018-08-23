@@ -6,7 +6,7 @@ use Libraries\Core\Controller;
 
 class ErrorController extends Controller
 {
-    
+
     /**
      * 403 Forbidden
      */
@@ -15,7 +15,7 @@ class ErrorController extends Controller
         header('HTTP/1.0 403 Forbidden', true, 403);
         $this->getView()->render('Templates/Errors/error403');
     }
-    
+
     /**
      * 404 Not Found
      */
@@ -24,7 +24,7 @@ class ErrorController extends Controller
         header('HTTP/1.0 404 Not Found', true, 404);
         $this->getView()->render('Templates/Errors/error404');
     }
-    
+
     /**
      * 500 Internal Server Error
      */
@@ -38,10 +38,10 @@ class ErrorController extends Controller
      * PDOException
      * @param int $errorCode
      */
-    public function connectionError(string $errorCode)
+    public function connectionError()
     {
-        header('HTTP/1.0 500 Internal Server Error', true, 500);
-        $this->getView()->render('Templates/Errors/connectionError', ['serverAdmin' => getenv('SERVER_ADMIN'), 'errorCode' => $errorCode]);
+        header('HTTP/1.0 503 Service Unavailable', true, 503);
+        $this->getView()->render('Templates/Errors/connectionError', ['serverAdmin' => getenv('SERVER_ADMIN')]);
     }
 
     /**
@@ -49,15 +49,17 @@ class ErrorController extends Controller
      * @param string $title
      * @param string $message
      */
-    public function error(string $title, string $message)
+    public function error(string $title, string $message, int $responseCode = 500, string $responseMessage = 'Internal Server Error')
     {
         $data = [
             'title' => $title,
             'message' => $message,
-            'serverAdmin' => getenv('SERVER_ADMIN')
+            'serverAdmin' => getenv('SERVER_ADMIN'),
+            'errorCode' => $responseCode
         ];
-        
-        header('HTTP/1.0 500 Internal Server Error', true, 500);
+
+        header('HTTP/1.0 ' . $responseCode . ' ' . $responseMessage, true, $responseCode);
         $this->getView()->render('Templates/Errors/error', $data);
     }
+    
 }

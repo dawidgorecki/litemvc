@@ -9,21 +9,35 @@ class Session
 
     /**
      * Starts the session
+     * @return bool
      */
-    public static function init()
+    public static function init(): bool
     {
         // If no session exist, start the session
         if (session_id() == '') {
-            session_start();
+            return session_start();
         }
+
+        return true;
     }
 
     /**
      * Deletes the session
+     * @return bool
      */
-    public static function destroy()
+    public static function destroy(): bool
     {
-        session_destroy();
+        if (session_id() != '') {
+            $_SESSION = [];
+
+            if (ini_get("session.use_cookies")) {
+                setcookie(session_name(), '', time() - 2592000);
+            }
+
+            return session_destroy();
+        }
+
+        return true;
     }
 
     /**
@@ -35,10 +49,10 @@ class Session
     {
         $_SESSION[$key] = $value;
     }
-    
+
     /**
      * @param string $key
-     * @param type $value
+     * @param mixed $value
      */
     public static function add(string $key, $value)
     {
@@ -46,25 +60,52 @@ class Session
     }
 
     /**
+     * Delete keys from $_SESSION
+     * @param mixed $keys
+     */
+    public static function delete($keys)
+    {
+        if (is_array($keys)) {
+            foreach ($keys as $key) {
+                unset($_SESSION[$key]);
+            }
+        } else {
+            unset($_SESSION[$keys]);
+        }
+    }
+
+    /**
      * Gets the value of a specific key of the session
      * @param string $key
-     * @param int $filter
+     * @param bool $xssFilter
+     * @param mixed $default
      * @return mixed
      */
-    public static function get(string $key, bool $filter = true)
+    public static function get(string $key, bool $xssFilter = false, $default = '')
     {
-        if (isset($_SESSION[$key])) {
-
-            $value = $_SESSION[$key];
-            
-            if ($filter) {
-                return Filter::XSSFilter($value);
-            } else {
-                return $value;
-            }
+        /**
+         * Specified key not exists - return default value
+         */
+        if (!isset($_SESSION[$key])) {
+            return $default;
         }
-        
-        return false;
+
+        $value = $_SESSION[$key];
+
+        if ($xssFilter) {
+            return Filter::XSSFilter($value);
+        } else {
+            return $value;
+        }
+    }
+
+    /**
+     * Checks if user is logged in or not
+     * @return bool
+     */
+    public static function userIsLoggedIn(): bool
+    {
+        return (self::get('user_logged_in') == 1) ? true : false;
     }
 
 }

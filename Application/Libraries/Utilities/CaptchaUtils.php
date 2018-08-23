@@ -16,10 +16,10 @@ class CaptchaUtils
      * @param array $bgColor
      */
     public static function generateCaptcha(
-      int $width, 
-      int $height, 
-      int $lines = 3, 
-      array $bgColor = [255, 255, 255])
+        int $width,
+        int $height,
+        int $lines = 3,
+        array $bgColor = [255, 255, 255])
     {
         $captcha = new CaptchaBuilder;
         $captcha->setMaxBehindLines($lines);
@@ -41,7 +41,7 @@ class CaptchaUtils
      */
     public static function checkCaptcha(string $captcha): bool
     {
-        if (Session::get('captcha') && ($captcha == Session::get('captcha'))) {
+        if ($captcha == Session::get('captcha')) {
             return true;
         }
 

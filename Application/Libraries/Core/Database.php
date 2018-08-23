@@ -8,7 +8,14 @@ use PDOException;
 class Database
 {
 
+    /**
+     * @var PDO
+     */
     protected $pdo;
+
+    /**
+     * @var \PDOStatement
+     */
     protected $stmt;
 
     /**
@@ -27,10 +34,6 @@ class Database
     {
         return $this->pdo;
     }
-
-    /**
-     * Transactions
-     */
 
     /**
      * Initiates a transaction
@@ -81,17 +84,6 @@ class Database
     }
 
     /**
-     * Execute an SQL statement and return the number of affected rows
-     * @param string $statement
-     * @return int
-     */
-    public function exec(string $statement): int
-    {
-        $count = $this->pdo->exec($statement);
-        return ($count === false) ? -1 : $count;
-    }
-
-    /**
      * Prepares a statement for execution and returns a statement object
      * @param string $statement
      */
@@ -100,6 +92,9 @@ class Database
         try {
             $this->stmt = $this->pdo->prepare($statement);
         } catch (PDOException $e) {
+            /**
+             * Database server cannot prepare the statement
+             */
             die($e->getMessage());
         }
     }
@@ -144,14 +139,37 @@ class Database
         if ($this->stmt) {
             return $this->stmt->execute();
         }
-        
+
         return false;
+    }
+
+    /**
+     * Execute a prepared statement and return result set
+     * @return mixed
+     */
+    public function executeAndFetchAll()
+    {
+        if ($this->execute()) {
+            return $this->fetchAll();
+        }
+
+        return false;
+    }
+
+    /**
+     * Execute an SQL statement and return the number of affected rows
+     * @param string $statement
+     * @return int
+     */
+    public function exec(string $statement): int
+    {
+        $count = $this->pdo->exec($statement);
+        return ($count === false) ? -1 : $count;
     }
 
     /**
      * Execute an SQL statement
      * @param string $statement
-     * @return mixed
      */
     public function query(string $statement)
     {
@@ -163,43 +181,34 @@ class Database
      * @param string $statement
      * @return mixed
      */
-    public function queryAndFetch(string $statement)
+    public function queryAndFetchAll(string $statement)
     {
         $this->query($statement);
         return $this->fetchAll();
     }
 
     /**
-     * Execute a prepared statement and return result set
-     * @return mixed
-     */
-    public function executeAndFetch()
-    {
-        $this->execute();
-        return $this->fetchAll();
-    }
-
-    /**
      * Return result set
+     * An empty array is returned if there are zero results to fetch, or FALSE on failure
      */
     public function fetchAll()
     {
         if ($this->stmt) {
             return $this->stmt->fetchAll();
         }
-        
+
         return false;
     }
 
     /**
      * Fetch the next row from a result set
      */
-    public function fetchSingle()
+    public function fetchSingle(int $fetchStyle = PDO::FETCH_ASSOC)
     {
         if ($this->stmt) {
-            return $this->stmt->fetch();
+            return $this->stmt->fetch($fetchStyle);
         }
-        
+
         return false;
     }
 
@@ -212,7 +221,7 @@ class Database
         if ($this->stmt) {
             return $this->stmt->rowCount();
         }
-        
+
         return 0;
     }
 
@@ -231,11 +240,11 @@ class Database
      */
     public function closeCursor(): bool
     {
-         if ($this->stmt) {
+        if ($this->stmt) {
             return $this->stmt->closeCursor();
-         }
-       
-         return false;
+        }
+
+        return false;
     }
 
 }

@@ -8,10 +8,28 @@ class System
     const ENV_DEVELOPMENT = 'devel';
     const ENV_PRODUCTION = 'production';
 
+    const E_GENERAL = "Error";
+    const E_WARNING = "Warning";
+    const E_NOTICE = "Notice";
+
+    /**
+     * @var string
+     */
     private static $rootDir;
-    private static $debugMode;
+
+    /**
+     * @var \Libraries\Core\Application
+     */
     private static $application;
+
+    /**
+     * @var string
+     */
     private static $defaultController;
+
+    /**
+     * @var string
+     */
     private static $defaultAction;
 
     /**
@@ -39,6 +57,18 @@ class System
      */
     public static function setEnvironment(string $env): bool
     {
+        $logFile = Config::get('LOG_PATH') . '/' . Config::get('LOG_FILENAME');
+
+        error_reporting(E_ALL);
+        ini_set('log_errors', 1);
+        ini_set('error_log', $logFile);
+
+        if ($env == self::ENV_DEVELOPMENT) {
+            ini_set('display_errors', 1);
+        } else {
+            ini_set('display_errors', 0);
+        }
+
         return putenv("APPLICATION_ENV=" . $env);
     }
 
@@ -52,34 +82,6 @@ class System
     }
 
     /**
-     * Turn on error reporting
-     * @param bool $debugMode
-     */
-    public static function setDebugMode(bool $debugMode)
-    {
-        ini_set('display_errors', $debugMode);
-
-        if ($debugMode) {
-            // Report all PHP errors
-            error_reporting(E_ALL);
-        } else {
-            // Turn off all error reporting
-            error_reporting(0);
-        }
-
-        self::$debugMode = $debugMode;
-    }
-
-    /**
-     * Check if debug mode is on
-     * @return bool
-     */
-    public static function isDebugMode(): bool
-    {
-        return self::$debugMode ?? false;
-    }
-
-    /**
      * Register a new application
      * @param Application $app
      */
@@ -90,11 +92,20 @@ class System
 
     /**
      * Gets application instance
-     * @return mixed
+     * @return Application|null
      */
-    public static function getApplication()
+    public static function getApplication(): ?Application
     {
-        return isset(self::$application) ? self::$application : null;
+        return self::$application;
+    }
+
+    /**
+     * Gets default Controller
+     * @return string
+     */
+    public static function getDefaultController(): string
+    {
+        return self::$defaultController ?? Config::get('DEFAULT_CONTROLLER', 'Page');
     }
 
     /**
@@ -107,12 +118,12 @@ class System
     }
 
     /**
-     * Gets default Controller
+     * Gets default Controller action
      * @return string
      */
-    public static function getDefaultController(): string
+    public static function getDefaultAction(): string
     {
-        return self::$defaultController ?? Config::get('DEFAULT_CONTROLLER');
+        return self::$defaultAction ?? Config::get('DEFAULT_ACTION', 'view');
     }
 
     /**
@@ -125,12 +136,16 @@ class System
     }
 
     /**
-     * Gets default Controller action
-     * @return string
+     * Add log
+     * @param string $msg
+     * @param string $file
+     * @param string $level
+     * @return bool
      */
-    public static function getDefaultAction(): string
+    public static function log(string $msg, string $file, string $level = self::E_GENERAL): bool
     {
-        return self::$defaultAction ?? Config::get('DEFAULT_ACTION');
+        $log = "[{$file}] {$level}: $msg" . PHP_EOL;
+        return error_log($log, 0);
     }
 
 }
