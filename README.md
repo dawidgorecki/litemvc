@@ -1,10 +1,10 @@
 # LiteMVC PHP framework
 
-This is a simple MVC framework for PHP 7.0.0 and later.
+This is a simple MVC framework for PHP 7.1.0 and later.
 
 ## Requirements
 
-- PHP 7.0.0+
+- PHP 7.1.0+
 - MySQL/PostgreSQL
 - mod_rewrite activated
 
