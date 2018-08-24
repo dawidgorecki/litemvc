@@ -26,6 +26,16 @@ class StringUtils
     }
 
     /**
+     * Convert CamelCase string to array
+     * @param string $string
+     * @return array
+     */
+    public static function splitByCapitalLetter(string $string): array
+    {
+        return preg_split('/(?=[A-Z])/', $string, -1, PREG_SPLIT_NO_EMPTY);
+    }
+
+    /**
      * Replace all local characters to corresponding latin character
      * @param string $string
      * @return string
