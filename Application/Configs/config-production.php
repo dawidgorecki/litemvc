@@ -8,8 +8,7 @@ return [
     'APP_TITLE' => 'LiteMVC',
     'APP_DESCRIPTION' => 'Simple MVC framework for PHP 7.1.0 and later',
     'APP_LANG' => 'en',
-    'LOG_PATH' => realpath(__DIR__ . '/../../Logs'),
-    'LOG_FILENAME' => 'error.log',
+    'LOG_FILE' => realpath(__DIR__ . '/../../Logs') . '/error.log',
 
     /**
      * Smarty configuration

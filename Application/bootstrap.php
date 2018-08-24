@@ -1,5 +1,6 @@
 <?php
 
+use Libraries\Core\Config;
 use Libraries\Core\System;
 use Libraries\Http\Router;
 
@@ -15,9 +16,10 @@ setlocale(LC_COLLATE, 'en_US.UTF-8');
 require __DIR__ . '/../Vendor/autoload.php';
 
 /**
- * Set system environment
+ * Set system environment and log file
  */
 System::setEnvironment(System::ENV_DEVELOPMENT);
+System::setLogFile(Config::get('LOG_FILE'));
 
 /**
  * Create router object and add routes
