@@ -8,20 +8,25 @@ class Page extends Model
 {
 
     /**
-     * Example of using database
+     * @var int
      */
-    public function getPageTitleById(int $id)
+    private $id;
+
+    /**
+     * @return int|null
+     */
+    public function getId(): ?int
     {
-        $db = $this->getDB();
+        // TODO: Implement getId() method.
+    }
 
-        // Prepare a statement for execution 
-        $db->prepare("SELECT title FROM pages WHERE id = :id LIMIT 1");
-        
-        // Bind a value to a parameter
-        $db->bind("id", $id);
-
-        // Execute a prepared statement and return result set
-        return $db->executeAndFetch();
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function setId(int $id)
+    {
+        // TODO: Implement setId() method.
     }
 
 }

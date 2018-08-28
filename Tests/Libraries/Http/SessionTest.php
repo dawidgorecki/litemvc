@@ -1,8 +1,7 @@
 <?php
 
-namespace Libraries\Core;
+namespace Libraries\Http;
 
-use Libraries\Http\Session;
 use PHPUnit\Framework\TestCase;
 
 class SessionTest extends TestCase

@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class ConfigTest extends TestCase
 {
+
     public function setUp()
     {
         System::setEnvironment(System::ENV_PRODUCTION);
@@ -30,4 +31,5 @@ class ConfigTest extends TestCase
     {
         $this->assertEquals(123, Config::get('WRONG_KEY', 123));
     }
+
 }

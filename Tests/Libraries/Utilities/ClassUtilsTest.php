@@ -1,14 +1,15 @@
 <?php
 
+namespace Libraries\Utilities;
+
 use Libraries\Core\Application;
-use Libraries\Utilities\ClassUtils;
 use PHPUnit\Framework\TestCase;
 
 class ClassUtilsTest extends TestCase
 {
 
     /**
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testGetNamespace()
     {
@@ -16,7 +17,7 @@ class ClassUtilsTest extends TestCase
     }
 
     /**
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testGetName()
     {
@@ -24,7 +25,7 @@ class ClassUtilsTest extends TestCase
     }
 
     /**
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testGetShortName()
     {
@@ -32,7 +33,7 @@ class ClassUtilsTest extends TestCase
     }
 
     /**
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testGetProperties()
     {

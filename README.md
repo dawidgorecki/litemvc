@@ -1,11 +1,13 @@
-# LiteMVC PHP framework
+# LiteMVC PHP framework  
+[![GitHub (pre-)release](https://img.shields.io/github/release/dawidgorecki/litemvc/all.svg)](https://github.com/dawidgorecki/litemvc/releases) [![GitHub license](https://img.shields.io/github/license/dawidgorecki/litemvc.svg)](https://github.com/dawidgorecki/litemvc/blob/master/LICENSE)
+
 
 This is a simple MVC framework for PHP 7.1.0 and later.
 
-## Requirements
+## Minimum Requirements
 
 - PHP 7.1.0+
-- MySQL/PostgreSQL
+- PDO driver for your respective database
 - mod_rewrite activated
 
 ## Usage
@@ -42,6 +44,13 @@ System::setEnvironment(System::ENV_DEVELOPMENT);
 System::setEnvironment(System::ENV_PRODUCTION);
 ```
 
+## Naming convention
+
+ * `Controller Class` - Singular with the first letter of each word capitalized and Controller suffix (e.g., UserController)
+ * `View Class` - Singular with the first letter of each word capitalized and View suffix (e.g., UserView)
+ * `Database Table` - Plural with underscores separating words (e.g., user_details)
+ * `Model Class` - Singular with the first letter of each word capitalized (e.g., UserDetail)
+
 ## Web server configuration
 
 Configure your web server to have the `Public` folder as the web root. Also add or update `ServerAdmin` variable in vhost configuration file. This will be used on the error pages.
@@ -75,6 +84,12 @@ Controller has two special methods executed before and after any other actions:
 public function before()
 {
     // e.g. checking authentication
+
+    if (!Session::userIsLoggedIn()) {
+        $errorController = new ErrorController();
+        $errorController->error403();
+        exit();
+    }
 }
 
 public function after() 
@@ -137,7 +152,62 @@ $db->prepare("SELECT title FROM pages WHERE id = :id LIMIT 1");
 $db->bind("id", $id);
 
 // Execute a prepared statement and return result set
-return $db->executeAndFetch();
+return $db->executeAndFetchAll();
+```
+
+Model private properties should have the same names as columns in database table if you want to use ActiveRecord features (CRUD).
+
+## Basic CRUD
+
+### Create
+To create a new record in database (e.g. add new user) we instantiating a new object (model) and then invoking the save() method.  
+```php
+// INSERT INTO users(name,email) VALUES('John','john@gmail.com')  
+$user = new User();
+$user->setName("John");
+$user->setEmail("john@gmail.com");
+$user->save();
+```
+
+### Read
+These are your basic methods to find and retrieve records from your database.  
+```php
+// SELECT * FROM users WHERE id=1 LIMIT 1
+$user = User::findById(1);
+echo $user->getName();
+
+// SELECT * FROM users
+$users = User::findAll();
+foreach ($users as $user) {
+    echo $user->getName();
+}
+
+// SELECT * FROM users WHERE email='john@gmail.com'
+$users = User::findByQuery("SELECT * FROM users WHERE email=:email", [":email" => "john@gmail.com"]);
+echo $users[0]->getName();
+```
+
+### Update
+To update you would just need to find a record first and then change one of attributes.  
+```php
+// UPDATE users SET name='Edwin' WHERE id=1
+$user = User::findById(1);
+$user->setName("Edwin");
+$user->save();
+```
+
+### Delete
+That will call SQL query to delete the record in your database.  
+```php
+// DELETE FROM users WHERE id=1
+$user = User::findById(1);
+$user->delete();
+```
+
+### Number of rows in table
+
+```php
+$rowCount = User::getRowsCount();
 ```
 
 ## Captcha
@@ -181,17 +251,24 @@ if ($mailer->sendMessage('peter@example.com', 'Peter Doe')) {
     die($mailer->getError());
 }
 ```
+## Logs & Errors
 
-## Errors
+All errors are reporting and saved in file defined in configuration file. Default location is `/Logs/error.log`.  
 
-Error Views are stored in `Application/Views/Templates/Errors` folder.
+You can add log by using this code:
 
-## Dependencies
+```php
+System::log("No route matched", __FILE__, System::E_NOTICE);
+```
 
-"smarty/smarty": "~3.1"  
-"phpmailer/phpmailer": "~6.0"  
-"spipu/html2pdf": "^5.1"  
-"gregwar/captcha": "1.*"  
+Error Views are stored in `Application/Views/Templates/Errors` folder.  
+
+You can render error View with following code:
+
+```php
+$error = new \Controllers\ErrorController();
+$error->error404();
+```
 
 ## License
 

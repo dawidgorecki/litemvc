@@ -57,11 +57,8 @@ class System
      */
     public static function setEnvironment(string $env): bool
     {
-        $logFile = Config::get('LOG_PATH') . '/' . Config::get('LOG_FILENAME');
-
         error_reporting(E_ALL);
         ini_set('log_errors', 1);
-        ini_set('error_log', $logFile);
 
         if ($env == self::ENV_DEVELOPMENT) {
             ini_set('display_errors', 1);
@@ -70,6 +67,14 @@ class System
         }
 
         return putenv("APPLICATION_ENV=" . $env);
+    }
+
+    /**
+     * @param string $logFileName
+     */
+    public static function setLogFile(string $logFileName)
+    {
+        ini_set('error_log', $logFileName);
     }
 
     /**
