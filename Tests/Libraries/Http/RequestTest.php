@@ -1,12 +1,12 @@
 <?php
 
-namespace Libraries\Core;
+namespace Libraries\Http;
 
-use Libraries\Http\Request;
 use PHPUnit\Framework\TestCase;
 
 class RequestTest extends TestCase
 {
+
     public function testGet()
     {
         $_GET['name'] = 'Chris';
@@ -42,17 +42,17 @@ class RequestTest extends TestCase
 
     public function testGetWithNonExistingKeyAndDefault()
     {
-        $this->assertEquals('f3b1c2a8d7', Request::get('token',false,'f3b1c2a8d7'));
+        $this->assertEquals('f3b1c2a8d7', Request::get('token', false, 'f3b1c2a8d7'));
     }
 
     public function testPostWithNonExistingKeyAndDefault()
     {
-        $this->assertEquals(20, Request::post('age',false,20));
+        $this->assertEquals(20, Request::post('age', false, 20));
     }
 
     public function testCookieWithNonExistingKeyAndDefault()
     {
-        $this->assertEquals('monster', Request::cookie('id',false,'monster'));
+        $this->assertEquals('monster', Request::cookie('id', false, 'monster'));
     }
 
     public function testPostXssFilter()

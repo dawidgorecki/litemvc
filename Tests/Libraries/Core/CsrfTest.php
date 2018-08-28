@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class CsrfTest extends TestCase
 {
+
     public function testTokenLength()
     {
         $token = Csrf::generateToken();
@@ -23,4 +24,5 @@ class CsrfTest extends TestCase
         $_POST['csrf_token'] = '12345';
         $this->assertFalse(Csrf::isTokenValid());
     }
+
 }
