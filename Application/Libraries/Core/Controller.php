@@ -10,7 +10,7 @@ abstract class Controller
 {
 
     /**
-     * @var \Libraries\Core\Model|null
+     * @var \Libraries\Core\ModelInterface
      */
     protected $model;
 
@@ -67,7 +67,7 @@ abstract class Controller
      * Return model object
      * @return Model|null
      */
-    public function getModel(): ?Model
+    public function getModel(): ?ModelInterface
     {
         return $this->model;
     }
@@ -104,7 +104,7 @@ abstract class Controller
      * @param string $modelName
      * @return null|Model
      */
-    public function loadModel(string $modelName): ?Model
+    public function loadModel(string $modelName): ?ModelInterface
     {
         if (file_exists($this->getModelPath($modelName))) {
             /**

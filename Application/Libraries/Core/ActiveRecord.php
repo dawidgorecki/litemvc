@@ -6,7 +6,7 @@ use Libraries\Utilities\ClassUtils;
 use Libraries\Utilities\InflectUtils;
 use Libraries\Utilities\StringUtils;
 
-abstract class ActiveRecord implements ActiveRecordInterface
+abstract class ActiveRecord implements ActiveRecordInterface, ModelInterface
 {
 
     /**

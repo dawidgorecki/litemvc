@@ -2,9 +2,9 @@
 
 namespace Models;
 
-use Libraries\Core\Model;
+use Libraries\Core\ActiveRecord;
 
-class User extends Model
+class User extends ActiveRecord
 {
 
     const ROLE_ADMIN = 1;

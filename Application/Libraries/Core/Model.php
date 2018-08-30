@@ -2,7 +2,7 @@
 
 namespace Libraries\Core;
 
-abstract class Model extends ActiveRecord
+abstract class Model implements ModelInterface
 {
     /**
      * @var \Libraries\Core\Database
