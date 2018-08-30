@@ -9,6 +9,8 @@ return [
     'APP_DESCRIPTION' => 'Simple MVC framework for PHP 7.1.0 and later',
     'APP_LANG' => 'en',
     'LOG_FILE' => realpath(__DIR__ . '/../../Logs') . '/error.log',
+    'MAX_LOGIN_ATTEMPTS' => 3,
+    'RESET_ATTEMPTS_AFTER_SEC' => 180,
 
     /**
      * Smarty configuration
