@@ -29,7 +29,7 @@ require __DIR__ . '/../Application/Configs/routes.php';
 
 /**
  * Change default root directory
- * System::setRootDir(realpath(__DIR__ . '/../'));
+ * System::setRootDir(__DIR__ . '/../');
  */
 
 /**
@@ -37,9 +37,3 @@ require __DIR__ . '/../Application/Configs/routes.php';
  * System::setDefaultController('page');
  * System::setDefaultAction('view');
  */
-
-/**
- * Only for tests
- */
-session_start();
-\Libraries\Http\Session::set('user_logged_in', 1);
