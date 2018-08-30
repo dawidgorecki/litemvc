@@ -29,7 +29,7 @@
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown-account" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">My account
                         {if \Libraries\Http\Session::userIsLoggedIn()}
-                            ({\Libraries\Http\Session::get('user_data')->getName()})
+                            ({\Libraries\Http\Session::get('user_data')->getUsername()})
                         {/if}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dropdown-account">
