@@ -27,16 +27,18 @@ class LoginController extends Controller
      */
     public function before()
     {
+        // Don't check if user is logged in
+    }
+
+    public function actionLogin()
+    {
         /**
          * Redirect to the home page if user is logged in
          */
         if (Session::userIsLoggedIn()) {
             Redirect::home();
         }
-    }
 
-    public function actionLogin()
-    {
         if (Request::requestMethod() == "POST" && Request::post('form_login') == 'form_login') {
             /**
              * Form has been submitted
@@ -56,7 +58,16 @@ class LoginController extends Controller
 
     public function actionLogout()
     {
-        $this->loginModel->logout();
+        if (!Session::userIsLoggedIn()) {
+            Redirect::to('user/login');
+        }
+
+        if ($this->loginModel->logout()) {
+            $this->getView()->render('Login/Logout');
+        } else {
+            $error = new ErrorController();
+            $error->error500();
+        }
     }
 
     public function actionResetPassword()
