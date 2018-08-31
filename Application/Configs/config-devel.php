@@ -11,6 +11,7 @@ return [
     'LOG_FILE' => realpath(__DIR__ . '/../../Logs') . '/error.log',
     'MAX_LOGIN_ATTEMPTS' => 3,
     'RESET_ATTEMPTS_AFTER_SEC' => 180,
+    'REGISTRATION' => true,
     
     /** 
      * Smarty configuration
@@ -42,11 +43,20 @@ return [
     /**
      * SMTP configuration
      */
-    
+
     'EMAIL_SMTP_HOST' => 'smtp.example.com',
     'EMAIL_SMTP_AUTH' => true,
     'EMAIL_SMTP_USERNAME' => 'user@example.com',
     'EMAIL_SMTP_PASSWORD' => 'secret',
     'EMAIL_SMTP_PORT' => 465,
     'EMAIL_SMTP_ENCRYPTION' => 'ssl',
+
+    /**
+     * Activation email settings
+     */
+
+    'EMAIL_VERIFICATION_FROM_EMAIL' => '',
+    'EMAIL_VERIFICATION_FROM_NAME' => 'LiteMVC',
+    'EMAIL_VERIFICATION_SUBJECT' => 'Account activation',
+    'EMAIL_VERIFICATION_CONTENT' => 'Please click on this link to activate your account: ',
 ];
