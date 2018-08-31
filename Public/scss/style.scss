@@ -17,7 +17,7 @@ html, body {
   min-width: 220px;
 }
 
-.login-form {
+.login-form, .register-form {
   min-width: 300px;
   box-shadow: 0 0 2px 0 #e2e2e2;
 }
@@ -32,4 +32,8 @@ html, body {
   background-color: #fff;
   color: #212529;
   font-weight: bold;
+}
+
+label {
+  font-size: 90%;
 }

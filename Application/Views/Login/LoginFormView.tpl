@@ -13,7 +13,7 @@
                     <h5 class="p-3 text-center border-bottom m-0">Sign in</h5>
 
                     <article class="card-body">
-                        <form method="post" autocomplete="on">
+                        <form method="post" autocomplete="off">
                             <input type="hidden" name="csrf_token" value="{\Libraries\Core\Csrf::generateToken()}">
 
                             <div class="form-group">
@@ -45,12 +45,13 @@
                     </article>
 
                 </div><!-- /.card -->
-                {*
-                                <p class="text-center mt-2 mb-0">
-                                    <a href="{\Libraries\Http\Request::getSiteUrl()}/user/register" class="text-info small">Create an
-                                        account for free</a>
-                                </p>
-                *}
+
+                {if \Libraries\Core\Config::get('REGISTRATION') eq true}
+                    <p class="text-center mt-2 mb-0">
+                        <a href="{\Libraries\Http\Request::getSiteUrl()}/register" class="text-info small">Create an
+                            account for free</a>
+                    </p>
+                {/if}
             </aside>
         </div><!-- /.row -->
     </div><!-- /.container -->

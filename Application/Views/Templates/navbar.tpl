@@ -37,13 +37,11 @@
                             <a class="dropdown-item"
                                href="{\Libraries\Http\Request::getSiteUrl()}/user/logout">Logout</a>
                         {else}
-                            <a class="dropdown-item {if \Libraries\Core\View::checkForActive('Login@index')}active{/if}"
-                               href="{\Libraries\Http\Request::getSiteUrl()}/user/login">Login</a
-                        {*
+                            <a class="dropdown-item {if \Libraries\Core\View::checkForActive('Login@actionLogin')}active{/if}"
+                               href="{\Libraries\Http\Request::getSiteUrl()}/user/login">Login</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item {if \Libraries\Core\View::checkForActive('Register@index')}active{/if}"
-                               href="{\Libraries\Http\Request::getSiteUrl()}/user/register">Register</a>
-                        *}
+                            <a class="dropdown-item {if \Libraries\Core\View::checkForActive('Register@actionRegister')}active{/if}"
+                               href="{\Libraries\Http\Request::getSiteUrl()}/register">Register</a>
                         {/if}
                     </div>
                 </li>

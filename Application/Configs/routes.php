@@ -7,3 +7,5 @@ $router->add("pages/checkout", "Page", "checkout");
 $router->add("user/login", "Login", "actionLogin");
 $router->add("user/logout", "Login", "actionLogout");
 $router->add("user/reset-password", "Login", "actionResetPassword");
+$router->add("register", "Register", "actionRegister");
+$router->add('activation/{id}/{code}', 'Register', 'actionActivation');
