@@ -8,4 +8,4 @@ $router->add("user/login", "Login", "actionLogin");
 $router->add("user/logout", "Login", "actionLogout");
 $router->add("user/reset-password", "Login", "actionResetPassword");
 $router->add("register", "Register", "actionRegister");
-$router->add('activation/{id}/{code}', 'Register', 'actionActivation');
+$router->add('activation/{username}/{code}', 'Register', 'actionActivation');

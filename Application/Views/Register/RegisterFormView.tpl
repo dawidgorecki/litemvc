@@ -1,6 +1,6 @@
 {extends file='Templates/template.tpl'}
 
-{block name="title"}{$app_title} - Registration{/block}
+{block name="title"}Create account{/block}
 
 {block name="content"}
     <div class="container">
@@ -34,9 +34,8 @@
                             </div><!-- /.form-group -->
 
                             <div class="pb-2">
-                                <small id="password-help" class="form-text text-muted">Your password must be 8-20
-                                    characters long, contain letters and numbers, and must not contain spaces and
-                                    special characters.
+                                <small id="password-help" class="form-text text-muted">
+                                    Your password cannot be shorter than 6 characters. Must contain at least one uppercase letter, one lowercase letter, and one number
                                 </small>
                             </div>
 
@@ -50,17 +49,18 @@
                             <div class="form-group">
                                 <label for="password_confirm">Confirm password</label>
                                 <input id="password_confirm" name="password_confirm"
-                                       class="form-control {if !empty($password_err)}is-invalid{/if}" type="password">
-                                <div class="invalid-feedback">{$password_err}</div>
+                                       class="form-control {if !empty($password_confirm_err)}is-invalid{/if}" type="password">
+                                <div class="invalid-feedback">{$password_confirm_err}</div>
                             </div><!-- /.form-group -->
 
                             <div class="form-group">
                                 <div class="form-check mb-4">
-                                    <input class="form-check-input" type="checkbox" value="checked" id="terms_agree"
+                                    <input class="form-check-input {if !empty($terms_agree_err)}is-invalid{/if}" type="checkbox" value="checked" id="terms_agree"
                                            name="terms_agree" {$terms_agree}>
-                                    <label class="form-check-label small" for="terms-agree">
+                                    <label class="form-check-label small" for="terms_agree">
                                         Agree to <a href="#">terms and conditions</a>
                                     </label>
+                                    <div class="invalid-feedback">{$terms_agree_err}</div>
                                 </div>
                             </div><!-- /.form-group -->
 

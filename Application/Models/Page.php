@@ -2,9 +2,9 @@
 
 namespace Models;
 
-use Libraries\Core\Model;
+use Libraries\Core\ActiveRecord;
 
-class Page extends Model
+class Page extends ActiveRecord
 {
 
     /**
