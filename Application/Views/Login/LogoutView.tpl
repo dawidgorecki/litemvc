@@ -1,6 +1,6 @@
 {extends file='Templates/template.tpl'}
 
-{block name="title"}Access forbidden{/block}
+{block name="title"}Logged out{/block}
 
 {block name="content"}
     <div class="container">

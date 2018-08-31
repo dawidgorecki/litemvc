@@ -109,6 +109,14 @@ class Login extends Model
         }
 
         /**
+         * Check if user account was activated
+         */
+        if (!$user->isActive()) {
+            Session::set('feedback_negative', 'Your account is not activated');
+            return false;
+        }
+
+        /**
          * Check login attempts
          */
         if ($user->getFailedLoginCount() >= Config::get('MAX_LOGIN_ATTEMPTS')) {
@@ -116,18 +124,17 @@ class Login extends Model
              * Too many login attempts
              */
             if (strtotime($user->getLastFailedLogin()) + Config::get('RESET_ATTEMPTS_AFTER_SEC') > time()) {
-                $timeDiff = strtotime($user->getLastFailedLogin()) + Config::get('RESET_ATTEMPTS_AFTER_SEC') - time();
-                Session::set('feedback_negative', 'Too many login attempts. Try again later (' . $timeDiff . ' sec remained).');
+                Session::set('feedback_negative', 'Too many login attempts');
                 return false;
             } else {
                 $this->resetFailedLoginCount($user);
             }
         }
 
-        /**
-         * Check password
-         */
         if (!password_verify($password, $user->getPasswordHash())) {
+            /**
+             * Wrong password
+             */
             $this->updateFailedLoginTimeAndCount($user);
             Session::set('feedback_negative', 'Wrong username or password');
             return false;

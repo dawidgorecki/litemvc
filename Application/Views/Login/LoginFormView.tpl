@@ -1,6 +1,6 @@
 {extends file='Templates/template.tpl'}
 
-{block name="title"}{$app_title} - Sign In{/block}
+{block name="title"}Sign In{/block}
 
 {block name="content"}
     <div class="container">
@@ -10,7 +10,7 @@
                 {include file="Templates/feedback.tpl"}
 
                 <div class="card login-form">
-                    <h5 class="p-3 text-center border-bottom m-0">Sign in</h5>
+                    <h5 class="p-3 text-center border-bottom m-0">Sign In</h5>
 
                     <article class="card-body">
                         <form method="post" autocomplete="off">
@@ -26,7 +26,7 @@
 
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input id="password" name="user_password"
+                                <input id="password" name="password"
                                        class="form-control {if !empty($password_err)}is-invalid{/if}" type="password">
                                 <div class="invalid-feedback">{$password_err}</div>
                                 <div class="text-right mt-2">
@@ -48,11 +48,12 @@
 
                 {if \Libraries\Core\Config::get('REGISTRATION') eq true}
                     <p class="text-center mt-2 mb-0">
-                        <a href="{\Libraries\Http\Request::getSiteUrl()}/register" class="text-info small">Create an
-                            account for free</a>
+                        <a href="{\Libraries\Http\Request::getSiteUrl()}/register" class="text-info small">
+                            Create an account for free</a>
                     </p>
                 {/if}
             </aside>
         </div><!-- /.row -->
-    </div><!-- /.container -->
+    </div>
+    <!-- /.container -->
 {/block}

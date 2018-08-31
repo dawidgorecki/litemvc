@@ -438,6 +438,30 @@ class User extends ActiveRecord
     }
 
     /**
+     * @param string $username
+     * @return User|null
+     */
+    public static function findByUsername(string $username): ?User
+    {
+        $query = "SELECT * FROM users WHERE username = :username LIMIT 1";
+        $objects = self::findByQuery($query, [':username' => $username]);
+
+        return !empty($objects) ? $objects[0] : null;
+    }
+
+    /**
+     * @param string $email
+     * @return User|null
+     */
+    public static function findByEmail(string $email): ?User
+    {
+        $query = "SELECT * FROM users WHERE email = :email LIMIT 1";
+        $objects = self::findByQuery($query, [':email' => $email]);
+
+        return !empty($objects) ? $objects[0] : null;
+    }
+
+    /**
      * Check if user has specific role
      * @param int $role
      * @return bool

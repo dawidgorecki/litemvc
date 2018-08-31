@@ -30,6 +30,31 @@ class LoginController extends Controller
         // Don't check if user is logged in
     }
 
+    protected function login()
+    {
+        if (!Csrf::isTokenValid()) {
+            $error = new ErrorController();
+
+            $error->error(
+                'Requested was rejected',
+                'Make sure you have access to the thing you tried to change',
+                422,
+                'Unprocessable Entity'
+            );
+
+            exit();
+        }
+
+        if ($this->loginModel->login(
+            Request::post('username'),
+            Request::post('password')
+        )) {
+            Redirect::home();
+        } else {
+            Redirect::to('user/login');
+        }
+    }
+
     public function actionLogin()
     {
         /**
@@ -46,9 +71,9 @@ class LoginController extends Controller
             $this->login();
         } else {
             $data = [
-                'username' => Session::get('form_username', true, ''),
-                'username_err' => Session::get('form_username_err', true, ''),
-                'password_err' => Session::get('form_password_err', true, '')
+                'username' => Session::get('form_username', true),
+                'username_err' => Session::get('form_username_err', true),
+                'password_err' => Session::get('form_password_err', true)
             ];
 
             Session::delete(['form_username', 'form_username_err', 'form_password_err']);
@@ -74,31 +99,6 @@ class LoginController extends Controller
     {
         // TODO: Implment reset password feature
         die('password_reset');
-    }
-
-    protected function login()
-    {
-        if (!Csrf::isTokenValid()) {
-            $error = new ErrorController();
-
-            $error->error(
-                'Requested was rejected',
-                'Make sure you have access to the thing you tried to change',
-                422,
-                'Unprocessable Entity'
-            );
-
-            exit();
-        }
-
-        if ($this->loginModel->login(
-            Request::post('username'),
-            Request::post('user_password')
-        )) {
-            Redirect::home();
-        } else {
-            Redirect::to('user/login');
-        }
     }
 
 }

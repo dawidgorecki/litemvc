@@ -26,6 +26,7 @@ class Mail
         $mail = new PHPMailer(true);
 
         $mail->SMTPDebug = (System::getEnvironment() == System::ENV_PRODUCTION) ? 0 : 2;
+        $mail->Debugoutput = 'error_log';
         $mail->CharSet = 'UTF-8';
 
         // Set mailer to use SMTP
