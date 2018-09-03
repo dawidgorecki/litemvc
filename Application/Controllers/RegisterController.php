@@ -99,9 +99,9 @@ class RegisterController extends Controller
         }
     }
 
-    public function actionActivation(string $username, string $activationCode)
+    public function actionActivation(string $username, string $hash)
     {
-        if ($this->registerModel->activate($username, $activationCode))
+        if ($this->registerModel->activate($username, $hash))
         {
             Redirect::to('user/login');
         }
@@ -109,7 +109,7 @@ class RegisterController extends Controller
         $error = new ErrorController();
         $error->error(
             'Requested was rejected',
-            'Make sure you have access to the thing you tried to change',
+            'Sorry, no such id/verification code combination here',
             422,
             'Unprocessable Entity'
         );

@@ -180,7 +180,10 @@ class Register extends Model
             ->setActivationHash($activationHash)
             ->setCreatedBy('system');
 
+        $this->getDB()->beginTransaction();
+
         if (!$user->save()) {
+            $this->getDB()->rollback();
             Session::add('feedback_negative', 'Sorry, your registration failed');
             return false;
         }
@@ -189,12 +192,19 @@ class Register extends Model
          * Send activation link via email
          */
         if ($this->sendActivationLink($user, $email, $activationHash)) {
-            Session::add('feedback_positive', 'Your account has been created');
+            $this->getDB()->commit();
+
+            Session::delete([
+                'form_username',
+                'form_email',
+                'form_terms_agree',
+            ]);
+
+            Session::add('feedback_positive', 'Your account has been created. Check your email to activate account');
             return true;
         }
 
-        $user->delete();
-        Session::add('feedback_negative', 'Verification mail could not be sent');
+        $this->getDB()->rollback();
         return false;
     }
 
@@ -207,27 +217,31 @@ class Register extends Model
      */
     public function sendActivationLink(User $user, string $email, string $activationHash): bool
     {
-        $activationLink = Request::getSiteUrl() . "/activation/" . urlencode($id) . '/' . urlencode($activationHash);
-        $message = Config::get('EMAIL_VERIFICATION_CONTENT') . "<br><a href='{$activationLink}' target='_blank'>{$activationLink}</a>";
+        $activationLink = Request::getSiteUrl() . "/activation/" .
+            urlencode($user->getUsername()) . '/' . urlencode($activationHash);
+
+        $message = Config::get('EMAIL_VERIFICATION_CONTENT') .
+            "<br><a href='{$activationLink}' target='_blank'>{$activationLink}</a>";
 
         $view = new View();
+        $emailBody = $view->render('Templates/email', [
+            'title' => Config::get('EMAIL_VERIFICATION_SUBJECT'),
+            'message' => $message
+        ], false);
+
         $mail = new Mail();
-
-        $body = $view->render('Templates/email', ["title" => Config::get('EMAIL_VERIFICATION_SUBJECT'), "message" => $message], false);
-
-        $mail->addContent(Config::get('EMAIL_VERIFICATION_SUBJECT'), $body);
+        $mail->addContent(Config::get('EMAIL_VERIFICATION_SUBJECT'), $emailBody);
         $mail->addRecipient($email);
 
-        // Try to send email
-        $mailSent = $mail->sendMessage(
+        if ($mail->sendMessage(
             Config::get('EMAIL_VERIFICATION_FROM_EMAIL'),
-            Config::get('EMAIL_VERIFICATION_FROM_NAME')
-        );
-
-        if ($mailSent) {
+            Config::get('EMAIL_VERIFICATION_FROM_NAME'))
+        ) {
             return true;
         } else {
             System::log($mail->getError(), __FILE__);
+            Session::add('feedback_negative', 'Verification mail could not be sent');
+
             return false;
         }
     }
@@ -237,21 +251,27 @@ class Register extends Model
      * @param string $activationCode
      * @return bool
      */
-    public function activate(int $id, string $activationCode): bool
+    public function activate(string $username, string $hash): bool
     {
         /**
          * @var User $user
          */
-        $user = User::findById($id);
+        $user = User::findByUsername($username);
 
-        if ($user->getActivationHash() === $activationCode) {
+        if ($user && $user->getActivationHash() === $hash) {
             $user->setIsActive(true);
-            Session::add('feedback_positive', 'Activation was successful! You can now log in');
-            return $user->save();
-        } else {
-            Session::add('feedback_negative', 'Sorry, no such id/verification code combination here');
-            return false;
+            $user->setActivationHash('');
+            $user->setModifiedBy('system');
+
+            if ($user->save()) {
+                Session::add('feedback_positive', 'Activation was successful! You can now log in');
+                return true;
+            } else {
+                return false;
+            }
         }
+
+        return false;
     }
 
 }

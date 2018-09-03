@@ -471,4 +471,14 @@ class User extends ActiveRecord
         return ($this->getRole() == $role) ? true : false;
     }
 
+    /**
+     * @return bool
+     */
+    public function update(): bool
+    {
+        $this->setModifiedAt(date('Y-m-d H:i:s'));
+        return parent::update();
+    }
+
+
 }
